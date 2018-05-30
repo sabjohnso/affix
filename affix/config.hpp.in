@@ -1,0 +1,11 @@
+#ifndef CONFIG.HPP_IN_INCLUDED_1310941366049923285
+#define CONFIG.HPP_IN_INCLUDED_1310941366049923285 1
+
+namespace affix
+{
+  constexpr static int major_version = ${AFFIX_MAJOR_VERSION};
+  constexpr static int minor_version = ${AFFIX_MINOR_VERSION};
+  constexpr static int patch_version = ${AFFIX_PATCH_VERSION};
+} // end of namespace affix
+
+#endif // !defined CONFIG.HPP_IN_INCLUDED_1310941366049923285
