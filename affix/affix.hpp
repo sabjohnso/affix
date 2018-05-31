@@ -111,6 +111,6 @@ namespace std
     using iterator_category = output_iterator_tag;
 
   };
-};
+}
 
 #endif // !defined AFFIX_HPP_INCLUDED_1341204327855951463

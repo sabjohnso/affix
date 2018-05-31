@@ -1,0 +1,26 @@
+#+TITLE: Affix
+
+* Status
+
+  Not suitable for use, production or otherwise.
+
+* Overview
+
+  The affix iterator is conceptually similar to the
+  std::ostream_iterator. However, rather just specifying an value that
+  is injected into the stream after each item, the affix iterator
+  allows prefix, infix and suffix values to be injected into the stream.
+  
+#+BEGIN_SRC c++
+std::vector<int> xs = {1, 2, 3, 4};
+std::copy( begin( xs ), end( xs ), affix::affix_iterator<int>( std::cout, "{", ",", "}" ));
+// 
+// => {1,2,3,4}
+//
+#+END_SRC
+
+* Outstanding Issues
+
+  The suffix decoration is injected into the output stream upon
+  destruction of the affix_iterator.  It is not clear that that is a
+  reasonable/reliable way for the suffix to be injected.
