@@ -1,4 +1,4 @@
-
+#
 # ... Build script for affix
 #
 
@@ -46,7 +46,6 @@ include_directories(
 add_subdirectory( affix )
 
 
-
 if( BUILD_AFFIX_TESTING )
   enable_testing()
   add_subdirectory( affix_testing )
@@ -58,17 +57,20 @@ if( BUILD_AFFIX_DOCUMENTATION )
   
   find_package( Doxygen REQUIRED  )
   configure_file( Doxyfile.in Doxyfile )
-  add_custom_target( affix_doc ALL
-    COMMAND "${DOXYGEN_EXECUTABLE}" "${AFFIX_BINARY_DIR}/Doxyfile"
-    DEPENDS "${AFFIX_BINARY_DIR}/Doxyfile" )
+  add_custom_command(
+    OUTPUT ${AFFIX_BINARY_DIR}/affix_doxygen.log
+    COMMAND "${DOXYGEN_EXECUTABLE}" "${AFFIX_BINARY_DIR}/Doxyfile" > affix_doxygen.log
+    MAIN_DEPENDENCY "${AFFIX_BINARY_DIR}/Doxyfile"
+    DEPENDS ${AFFIX_SOURCE_DIR}/affix/affix.hpp
+    WORKING_DIRECTORY ${AFFIX_BINARY_DIR} )
+
+  add_custom_target(
+    affix_documentation ALL
+    DEPENDS ${AFFIX_BINARY_DIR}/affix_doxygen.log )
   
   install( DIRECTORY ${AFFIX_BINARY_DIR}/doc DESTINATION ${AFFIX_INSTALL_DOC_DIR})
 endif( BUILD_AFFIX_DOCUMENTATION )
 
-
 install( SCRIPT cmake/post_install.cmake )
-
-
-
 
 # end of build definition for affix
