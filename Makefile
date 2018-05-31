@@ -13,8 +13,10 @@ CMAKE_FLAGS_COMMON = \
   -DCMAKE_CXX_FLAGS_RELWITHDEBINFO=-O3 -g
 
 
+
 .PHONY: all
 all: release
+
 
 #
 # ... Release
@@ -33,6 +35,12 @@ $(CMAKE_CACHE_RELEASE): $(BUILD_DIRECTORY_RELEASE)
 
 $(BUILD_DIRECTORY_RELEASE):
 	mkdir -p $(BUILD_DIRECTORY_RELEASE)
+
+.PHONY: install
+install: release
+	cd $(BUILD_DIRECTORY_RELEASE) && make install
+
+
 
 
 
