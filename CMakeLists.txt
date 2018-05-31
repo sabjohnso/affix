@@ -1,4 +1,4 @@
-#
+
 # ... Build script for affix
 #
 
@@ -8,6 +8,7 @@ project( AFFIX )
 
 option( BUILD_AFFIX_TESTING "Build the affix  tests" ON )
 option( ACTIVATE_VERSION_ON_INSTALLATION "Link the unversioned include directory to this version." ON )
+option( BUILD_AFFIX_DOCUMENTATION "Build the documentation for the affix library." ON )
 
 set( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH}
   "${CMAKE_CURRENT_SOURCE_DIR}/cmake" )
@@ -52,7 +53,22 @@ if( BUILD_AFFIX_TESTING )
 endif( BUILD_AFFIX_TESTING )
 
 
-install (SCRIPT cmake/post_install.cmake)
+
+if( BUILD_AFFIX_DOCUMENTATION )
+  
+  find_package( Doxygen REQUIRED  )
+  configure_file( Doxyfile.in Doxyfile )
+  add_custom_target( affix_doc ALL
+    COMMAND "${DOXYGEN_EXECUTABLE}" "${AFFIX_BINARY_DIR}/Doxyfile"
+    DEPENDS "${AFFIX_BINARY_DIR}/Doxyfile" )
+  
+  install( DIRECTORY ${AFFIX_BINARY_DIR}/doc DESTINATION ${AFFIX_INSTALL_DOC_DIR})
+endif( BUILD_AFFIX_DOCUMENTATION )
+
+
+install( SCRIPT cmake/post_install.cmake )
+
+
 
 
 # end of build definition for affix
