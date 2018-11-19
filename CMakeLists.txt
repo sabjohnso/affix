@@ -4,40 +4,61 @@
 
 cmake_minimum_required( VERSION 3.1 )
 
-project( AFFIX )
+project( AFFIX VERSION 0.2 LANGUAGES CXX )
 
 option( BUILD_AFFIX_TESTING "Build the affix  tests" ON )
-option( ACTIVATE_VERSION_ON_INSTALLATION "Link the unversioned include directory to this version." ON )
 option( BUILD_AFFIX_DOCUMENTATION "Build the documentation for the affix library." ON )
 
-set( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH}
+list( APPEND CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH}
   "${CMAKE_CURRENT_SOURCE_DIR}/cmake" )
 
 set( CMAKE_CXX_STANDARD 14 )
 
-include( affix_version )
-set( affix_version "${AFFIX_MAJOR_VERSION}.${AFFIX_MINOR_VERSION}.${AFFIX_PATCH_VERSION}" )
 
-if( NOT AFFIX_INSTALL_INCLUDE_DIR )
-  set( AFFIX_INSTALL_INCLUDE_DIR
-    include/affix-${AFFIX_MAJOR_VERSION}.${AFFIX_MINOR_VERSION}/affix
-    CACHE
-    PATH
-    "Path for the installation of the affix header files" )
-endif( NOT AFFIX_INSTALL_INCLUDE_DIR )
+include( GNUInstallDirs )
 
 
 
+set( affix_version "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}" )
+set( AFFIX_INSTALL_INCLUDEDIR ${CMAKE_INSTALL_INCLUDEDIR}/affix-${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
+  CACHE PATH "Path for the installation of the affix header files" )
+
+set( AFFIX_INSTALL_LIBDIR ${CMAKE_INSTALL_LIBDIR}/affix-${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR})
+set( AFFIX_INSTALL_CONFIGDIR ${AFFIX_INSTALL_LIBDIR})
 
 
+add_library( affix INTERFACE )
+target_include_directories( affix INTERFACE
+  $<BUILD_INTERFACE:${AFFIX_SOURCE_DIR}>
+  $<BUILD_INTERFACE:${AFFIX_SOURCE_DIR}>
+  $<INSTALL_INTERFACE:${AFFIX_INSTALL_INCLUDEDIR}> )
 
-
-include_directories( 
-  ${AFFIX_SOURCE_DIR}
-  ${AFFIX_BINARY_DIR})
-
-
+add_library(affix::affix ALIAS affix)
+  
+  
 add_subdirectory( affix )
+
+install(
+  TARGETS affix
+  EXPORT affix_targets
+  LIBRARY DESTINATION ${AFFIX_INSTALL_LIBDIR})
+
+install(
+  EXPORT affix_targets
+  NAMESPACE affix::
+  FILE affix-targets.cmake
+  DESTINATION ${AFFIX_INSTALL_CONFIGDIR})
+
+configure_file( affix-config.cmake.in affix-config.cmake @ONLY)
+install(
+  FILES ${AFFIX_BINARY_DIR}/affix-config.cmake
+  DESTINATION ${AFFIX_INSTALL_CONFIGDIR})
+
+
+
+
+
+
 
 
 if( BUILD_AFFIX_TESTING )
